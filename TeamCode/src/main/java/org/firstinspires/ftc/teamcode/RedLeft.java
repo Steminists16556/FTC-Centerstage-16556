@@ -2,46 +2,37 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @Autonomous
-public class AutoRed extends LinearOpMode {
+public class RedLeft extends LinearOpMode {
 
-    // hardware declarations
     DcMotor backRight ;
     DcMotor backLeft ;
     DcMotor frontRight ;
     DcMotor frontLeft ;
-    DcMotor arm;
 
-
-    public void runOpMode(){
-        //hardware mappings
+    public void runOpMode (){
         backRight = hardwareMap.dcMotor.get("backRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
         frontLeft = hardwareMap.dcMotor.get("frontLeft");
         frontRight = hardwareMap.dcMotor.get("frontRight");
-        arm = hardwareMap.dcMotor.get("arm");
-        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-        waitForStart();
+        backRight.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        arm.setPower(.5);
-        sleep(50);
 
-        //actual code
 
-        drive(1, 0, 0,150);
-        drive(1, 0, 2000, 0);
-        //
-        // drive(1, 0, 1500, 0);
+
+//actual code
+        drive(1, 2000, 0,0);
+        drive(1, 0, 4500, 0);
+
+
 
     }
-
-    public void drive(double power, int pivot, int vertical, int horizontal){
+    public void drive(double power, int forward, int strafe, int turn){
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -52,10 +43,10 @@ public class AutoRed extends LinearOpMode {
         frontLeft.setPower(power);
         backLeft.setPower(power);
 
-        backLeft.setTargetPosition(-pivot - vertical - horizontal);
-        backRight.setTargetPosition(-pivot + vertical + horizontal);
-        frontLeft.setTargetPosition(-pivot - (vertical + horizontal));
-        frontRight.setTargetPosition(-pivot + (vertical - horizontal));
+        backRight.setTargetPosition(-forward+strafe+turn);
+        frontRight.setTargetPosition(-forward-strafe+turn);
+        backLeft.setTargetPosition(-forward+strafe-turn);
+        frontLeft.setTargetPosition(-forward-strafe-turn);
 
         backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -71,6 +62,4 @@ public class AutoRed extends LinearOpMode {
 
 
     }
-
-
 }
