@@ -25,10 +25,6 @@ public class Steminists extends OpMode { //1st bracket
     Servo leftServo;
     Servo drone;
 
-    //declares the # of ticks
-    //double sliderTicks = 1426.1;
-    //double sliderTarget;
-
 
     public void init() { //2nd bracket
 
@@ -54,17 +50,6 @@ public class Steminists extends OpMode { //1st bracket
         backRight.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-//encoders for slider
-
-       // slider.setDirection(DcMotorSimple.Direction.REVERSE);
-        //slider.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-
-//encoders for arm
-
-       // arm.setDirection(DcMotorSimple.Direction.REVERSE);
-       // arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
 
     } //2nd end bracket
 
@@ -87,61 +72,26 @@ public class Steminists extends OpMode { //1st bracket
 
         slider.setPower(out);
 
-//encoder mapping button start for arm/code for slider
-       // if (gamepad2.y) {
-            //full(1.45);
-
-
-        //if (gamepad2.x) {
-           // origin();
-
-
-        //if (gamepad2.b) {
-           // full(2.175);
-
-
-        //if (gamepad2.a) {
-            //full(0.725);
-
-
 //Servo code
         if (gamepad2.left_bumper) {
-            rightServo.setPosition(.2);
+            rightServo.setPosition(0);
             leftServo.setPosition(1);
 
         }
 
         if (gamepad2.right_bumper) {
-            rightServo.setPosition(.5);
-            leftServo.setPosition(.5);
+            rightServo.setPosition(.2);
+            leftServo.setPosition(.8);
 
         }
 //Drone code
-        //if (gamepad2.x) {
-           // drone.setPosition(1);
+        if (gamepad2.x) {
+            drone.setPosition(1);
+        }
 
 
-
-        //telemetry.addData("Slider ticks:", arm.getCurrentPosition());
 
     } //end of loops
-
-    //ticks loop for slider start
-    //public void full(double turnage) {
-       //sliderTarget = sliderTicks * turnage;
-        //slider.setTargetPosition((int) sliderTarget);
-        //slider.setPower(.85);
-        //slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-    //public void origin() {
-        //slider.setTargetPosition(0);
-        //slider.setPower(0.9);
-        //slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-
-//ticks loop for slider ends
 
 
 }    //last bracket
