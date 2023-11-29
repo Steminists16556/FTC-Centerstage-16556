@@ -24,6 +24,8 @@ public class BlueRight extends LinearOpMode  {
         backRight.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        waitForStart();
+
 
         drive(1, 2000, 0, 0);
         drive(1, 0, 4500, 0);
@@ -40,8 +42,8 @@ public class BlueRight extends LinearOpMode  {
         frontLeft.setPower(power);
         backLeft.setPower(power);
 
-        backRight.setTargetPosition(-forward - strafe + turn);
-        frontRight.setTargetPosition(-forward + strafe + turn);
+        backRight.setTargetPosition(-forward + strafe + turn);
+        frontRight.setTargetPosition(-forward - strafe + turn);
         backLeft.setTargetPosition(-forward - strafe - turn);
         frontLeft.setTargetPosition(-forward + strafe - turn);
 

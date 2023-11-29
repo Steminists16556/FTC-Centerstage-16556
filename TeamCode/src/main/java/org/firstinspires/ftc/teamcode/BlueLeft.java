@@ -36,6 +36,8 @@ public class BlueLeft extends LinearOpMode {
         // arm.setPower(.5);
        // sleep(50);
 
+        waitForStart();
+
 
 //actual code
         drive(1, 300, 0, 0);
@@ -59,8 +61,8 @@ public class BlueLeft extends LinearOpMode {
         frontLeft.setPower(power);
         backLeft.setPower(power);
 
-        backRight.setTargetPosition(-forward-strafe+turn);
-        frontRight.setTargetPosition(-forward+strafe+turn);
+        backRight.setTargetPosition(-forward+strafe+turn);
+        frontRight.setTargetPosition(-forward-strafe+turn);
         backLeft.setTargetPosition(-forward-strafe-turn);
         frontLeft.setTargetPosition(-forward+strafe-turn);
 

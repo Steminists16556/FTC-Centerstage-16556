@@ -21,6 +21,7 @@ public class Steminists extends OpMode { //1st bracket
     DcMotor frontLeft;
     DcMotor slider;
     DcMotor arm;
+    DcMotor suspender;
     Servo rightServo;
     Servo leftServo;
     Servo drone;
@@ -46,6 +47,8 @@ public class Steminists extends OpMode { //1st bracket
         rightServo =  hardwareMap.servo.get("rightServo");
         leftServo =  hardwareMap.servo.get("leftServo");
 
+        drone = hardwareMap.servo.get("drone");
+
 //reversing right motors
         backRight.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -61,9 +64,10 @@ public class Steminists extends OpMode { //1st bracket
         double turn = gamepad1.right_stick_x;
         double up = .5 * gamepad2.left_stick_y;
         double out = .6 * gamepad2.right_stick_y;
+        double lift = gamepad1.right_stick_y;
 
-        backRight.setPower(forward + strafe + turn);
-        frontRight.setPower(forward - strafe + turn);
+        backRight.setPower(forward - strafe + turn);
+        frontRight.setPower(forward + strafe + turn);
         backLeft.setPower(forward + strafe - turn);
         frontLeft.setPower(forward - strafe - turn);
 
@@ -72,22 +76,29 @@ public class Steminists extends OpMode { //1st bracket
 
         slider.setPower(out);
 
+        suspender.setPower(lift);
+
 //Servo code
         if (gamepad2.left_bumper) {
-            rightServo.setPosition(0);
-            leftServo.setPosition(1);
-
-        }
-
-        if (gamepad2.right_bumper) {
             rightServo.setPosition(.2);
             leftServo.setPosition(.8);
 
         }
+
+        if (gamepad2.right_bumper) {
+            rightServo.setPosition(.5);
+            leftServo.setPosition(.5);
+
+        }
 //Drone code
         if (gamepad2.x) {
-            drone.setPosition(1);
+            drone.setPosition(.6);
+
         }
+        if (gamepad2.y) {
+            drone.setPosition(.2);
+        }
+
 
 
 

@@ -14,8 +14,8 @@ public class RedRight extends LinearOpMode {
     DcMotor backLeft ;
     DcMotor frontRight ;
     DcMotor frontLeft ;
-    Servo rightServo;
-    Servo leftServo;
+    //Servo rightServo;
+    //Servo leftServo;
     //DcMotor arm;
 
 
@@ -34,7 +34,7 @@ public class RedRight extends LinearOpMode {
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
-        //waitForStart();
+        waitForStart();
         //arm.setPower(.5);
         //sleep(50);
 
@@ -42,8 +42,8 @@ public class RedRight extends LinearOpMode {
         drive(1, 300, 0,0);
         drive(1, 0, 2000, 0);
 
-        rightServo.setPosition(.2);
-        leftServo.setPosition(1);
+        //rightServo.setPosition(.2);
+        //leftServo.setPosition(1);
 
 
 
@@ -66,8 +66,8 @@ public class RedRight extends LinearOpMode {
         frontLeft.setPower(power);
         backLeft.setPower(power);
 
-        backRight.setTargetPosition(-forward+strafe+turn);
-        frontRight.setTargetPosition(-forward-strafe+turn);
+        backRight.setTargetPosition(-forward-strafe+turn);
+        frontRight.setTargetPosition(-forward+strafe+turn);
         backLeft.setTargetPosition(-forward+strafe-turn);
         frontLeft.setTargetPosition(-forward-strafe-turn);
 
