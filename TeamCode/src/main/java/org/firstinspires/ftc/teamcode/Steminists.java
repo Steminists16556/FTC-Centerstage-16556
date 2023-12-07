@@ -21,7 +21,8 @@ public class Steminists extends OpMode { //1st bracket
     DcMotor frontLeft;
     DcMotor slider;
     DcMotor arm;
-    DcMotor suspender;
+    DcMotor upLeft;
+    DcMotor upRight;
     Servo rightServo;
     Servo leftServo;
     Servo drone;
@@ -34,6 +35,8 @@ public class Steminists extends OpMode { //1st bracket
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
         frontLeft = hardwareMap.dcMotor.get("frontLeft");
+        upRight = hardwareMap.dcMotor.get("upRight");
+        upLeft = hardwareMap.dcMotor.get("upLeft");
 
 //hardware mapping for manipulator motors and a brake
         slider = hardwareMap.dcMotor.get("slider");
@@ -52,6 +55,7 @@ public class Steminists extends OpMode { //1st bracket
 //reversing right motors
         backRight.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        upRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
     } //2nd end bracket
@@ -75,8 +79,10 @@ public class Steminists extends OpMode { //1st bracket
         arm.setPower(up);
 
         slider.setPower(out);
+//code for suspender
+        upLeft.setPower(lift);
+        upRight.setPower(lift);
 
-        suspender.setPower(lift);
 
 //Servo code
         if (gamepad2.left_bumper) {

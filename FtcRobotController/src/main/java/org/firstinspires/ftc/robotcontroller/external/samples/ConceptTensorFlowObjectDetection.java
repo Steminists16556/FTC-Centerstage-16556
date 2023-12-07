@@ -29,9 +29,9 @@
 
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -47,8 +47,7 @@ import java.util.List;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
-@TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
-@Disabled
+@Autonomous(name = "Concept: TensorFlow Object Detection", group = "Concept")
 public class ConceptTensorFlowObjectDetection extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
@@ -58,12 +57,14 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
      */
     private TfodProcessor tfod;
 
+    private static final String[] LABELS ={"blueGP"};
+
     /**
      * The variable to store our instance of the vision portal.
      */
     private VisionPortal visionPortal;
 
-    @Override
+
     public void runOpMode() {
 
         initTfod();
@@ -110,13 +111,20 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
             // Use setModelAssetName() if the TF Model is built in as an asset.
             // Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
             //.setModelAssetName(TFOD_MODEL_ASSET)
-            //.setModelFileName(TFOD_MODEL_FILE)
+            .setModelFileName("blueGP.tflite")
 
-            //.setModelLabels(LABELS)
+                .setMaxNumRecognitions(1)
+                .setTrackerMaxOverlap(0.25f)
+                .setModelLabels(LABELS)
+                .setNumDetectorThreads(1)
+                .setNumExecutorThreads(1)
+
+            //.setModelLabels(blueGP)
             //.setIsModelTensorFlow2(true)
             //.setIsModelQuantized(true)
             //.setModelInputSize(300)
             //.setModelAspectRatio(16.0 / 9.0)
+
 
             .build();
 
@@ -129,6 +137,8 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
         } else {
             builder.setCamera(BuiltinCameraDirection.BACK);
         }
+
+
 
         // Choose a camera resolution. Not all cameras support all resolutions.
         //builder.setCameraResolution(new Size(640, 480));

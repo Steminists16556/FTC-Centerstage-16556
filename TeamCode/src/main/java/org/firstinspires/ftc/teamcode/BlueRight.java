@@ -27,8 +27,11 @@ public class BlueRight extends LinearOpMode  {
         waitForStart();
 
 
-        drive(1, 2000, 0, 0);
-        drive(1, 0, 4500, 0);
+        drive(1, 2500, 0, 0);
+        drive(1,0,3000,0);
+        drive(1, -100, 0, 0);
+        drive(1,0,1000,0);
+
 
     }
     public void drive(double power, int forward, int strafe, int turn) {
@@ -57,7 +60,7 @@ public class BlueRight extends LinearOpMode  {
 
 
         }
-        sleep(100);
+        sleep(300);
 
 
     }
