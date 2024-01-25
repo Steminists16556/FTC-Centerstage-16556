@@ -6,6 +6,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.tfod.TfodProcessor;
+
+import java.util.List;
+
 @Autonomous
 public class BlueLeft extends LinearOpMode {
 
@@ -14,9 +21,26 @@ public class BlueLeft extends LinearOpMode {
     DcMotor backLeft;
     DcMotor frontRight;
     DcMotor frontLeft;
+    DcMotor arm;
+    DcMotor slider;
+    DcMotor upLeft;
+    DcMotor upRight;
     Servo leftServo;
     Servo rightServo;
-    //DcMotor arm;
+
+    double horizontalPos = -100000;
+
+    double threshold1 = 200;
+    //double threshold2 = 400;
+
+    TfodProcessor tfod;
+    VisionPortal visionPortal;
+
+    double confidence = 0;
+
+    int numRecognitions = 0;
+
+    String[] LABELS = {"blueGP"};
 
     public void runOpMode() {
 
@@ -25,26 +49,81 @@ public class BlueLeft extends LinearOpMode {
         backLeft = hardwareMap.dcMotor.get("backLeft");
         frontLeft = hardwareMap.dcMotor.get("frontLeft");
         frontRight = hardwareMap.dcMotor.get("frontRight");
-        //arm = hardwareMap.dcMotor.get("arm");
+        upRight = hardwareMap.dcMotor.get("upRight");
+        upLeft = hardwareMap.dcMotor.get("upLeft");
+        slider = hardwareMap.dcMotor.get("slider");
+        arm = hardwareMap.dcMotor.get("arm");
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightServo = hardwareMap.servo.get("rightServo");
+        leftServo = hardwareMap.servo.get("leftServo");
 
 //reversing right motors
         backRight.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
-       // waitForStart();
-        // arm.setPower(.5);
-       // sleep(50);
+        initTfod();
+
+        while (!opModeIsActive()) {
+            scanForObjects();
+        }
+
 
         waitForStart();
 
+//right spike
+        if(horizontalPos == -100000 || confidence < .8){
+            leftServo.setPosition(.5);
+            rightServo.setPosition(.5);
+            upLeft.setPower(-.5);
+            sleep(30);
+            upRight.setPower(.5);
+            sleep(30);
 
-//actual code
-        drive(1, 300, 0, 0);
-        drive(1, 0, 2000, 0);
 
-        //rightServo.setPosition(.2);
-        //leftServo.setPosition(1);
+            drive(1,1200,0,0);
+            drive(1,0,0,400);
+            sleep(50);
+            rightServo.setPosition(.1);
+            leftServo.setPosition(.9);
+
+        }
+
+//Left spike
+        else if(horizontalPos < threshold1 || numRecognitions == 2){
+            leftServo.setPosition(.5);
+            rightServo.setPosition(.5);
+            upLeft.setPower(-.5);
+            sleep(50);
+            upRight.setPower(.5);
+            sleep(50);
+
+
+            drive(1,1200,0,0);
+            drive(1,0,0,-400);
+            sleep(50);
+            rightServo.setPosition(.1);
+            leftServo.setPosition(.9);
+
+        }
+//middle spike
+        else if(horizontalPos > threshold1){
+
+            leftServo.setPosition(.5);
+            rightServo.setPosition(.5);
+            upLeft.setPower(-.5);
+            sleep(50);
+            upRight.setPower(.5);
+            sleep(50);
+
+
+            drive(1,1300,0,0);
+            sleep(50);
+            rightServo.setPosition(.1);
+            leftServo.setPosition(.9);
+
+        }
+
 
 
 
@@ -61,10 +140,10 @@ public class BlueLeft extends LinearOpMode {
         frontLeft.setPower(power);
         backLeft.setPower(power);
 
-        backRight.setTargetPosition(-forward+strafe+turn);
-        frontRight.setTargetPosition(-forward-strafe+turn);
-        backLeft.setTargetPosition(-forward-strafe-turn);
-        frontLeft.setTargetPosition(-forward+strafe-turn);
+        backRight.setTargetPosition(- forward+strafe+turn);
+        frontRight.setTargetPosition(- forward-strafe+turn);
+        backLeft.setTargetPosition(- forward-strafe-turn);
+        frontLeft.setTargetPosition(- forward+strafe-turn);
 
         backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -80,4 +159,48 @@ public class BlueLeft extends LinearOpMode {
 
     }
 
+    private void initTfod() {
+        tfod = new TfodProcessor.Builder()
+
+                .setModelFileName("blueGP.tflite")
+                .setMaxNumRecognitions(3)
+                .setTrackerMaxOverlap(0.25f)
+                .setModelLabels(LABELS)
+                .setNumDetectorThreads(4)
+                .setNumExecutorThreads(4)
+
+                .build();
+        VisionPortal.Builder builder = new VisionPortal.Builder();
+
+        builder.setCamera(hardwareMap.get(WebcamName.class,"Webcam 1"));
+
+        builder.addProcessor(tfod);
+        visionPortal = builder.build();
+    }
+
+    private boolean scanForObjects() {
+        List<Recognition> currentRecognitions = tfod.getRecognitions();
+        telemetry.addData("# Objects Detected", currentRecognitions.size());
+
+        numRecognitions = ((List<?>) currentRecognitions).size();
+
+        if(currentRecognitions.isEmpty()){
+            horizontalPos = -100000;
+            return false;
+        }
+
+        for (Recognition recognition : currentRecognitions) {
+            horizontalPos = (recognition.getLeft()+recognition.getRight())/2;
+            confidence = recognition.getConfidence();
+
+            telemetry.addData("", " ");
+            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
+            telemetry.addData("- Position", "%.0f", horizontalPos);
+            telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
+            break;
+        }
+
+        return true;
+    }
 }
+

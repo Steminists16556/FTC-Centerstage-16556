@@ -22,13 +22,16 @@ public class RedLeft extends LinearOpMode {
     DcMotor frontRight;
     DcMotor frontLeft;
     DcMotor arm;
+    DcMotor slider;
+    DcMotor upLeft;
+    DcMotor upRight;
     Servo leftServo;
     Servo rightServo;
 
     double horizontalPos = -100000;
 
     double threshold1 = 200;
-    double threshold2 = 400;
+    //double threshold2 = 400;
 
     TfodProcessor tfod;
     VisionPortal visionPortal;
@@ -38,18 +41,25 @@ public class RedLeft extends LinearOpMode {
 
     int numRecognitions = 0;
 
-    String[] LABELS = {"blueGP"};
+    String[] LABELS = {"redGP"};
 
 
     public void runOpMode() {
+
+//hardware mapping
         backRight = hardwareMap.dcMotor.get("backRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
         frontLeft = hardwareMap.dcMotor.get("frontLeft");
         frontRight = hardwareMap.dcMotor.get("frontRight");
+        upRight = hardwareMap.dcMotor.get("getRight");
+        upLeft = hardwareMap.dcMotor.get("upLeft");
+        slider = hardwareMap.dcMotor.get("slider");
         arm = hardwareMap.dcMotor.get("arm");
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightServo = hardwareMap.servo.get("rightServo");
+        leftServo = hardwareMap.servo.get("leftServo");
 
-
+//reversing right motors
         backRight.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -62,19 +72,56 @@ public class RedLeft extends LinearOpMode {
 
         waitForStart();
 
-//middle spike
-        if(horizontalPos < threshold2){
-            drive(1,300,0,0);
-            leftServo.setPosition(3);
+//right spike
+        if(horizontalPos == -100000 || confidence < .7){
+            rightServo.setPosition(.5);
+            leftServo.setPosition(.5);
+            upLeft.setPower(-.5);
+            sleep(30);
+            upRight.setPower(.5);
+            sleep(30);
 
+
+            drive(1,1100,0,0);
+            drive(1,0,0,500);
+            sleep(50);
+            //sleep(50);
+            //drive(1,300, 0,0);
+            rightServo.setPosition(.2);
+            leftServo.setPosition(.8);
 
         }
 //Left spike
-        else if(horizontalPos < threshold1){
+        else if(horizontalPos < threshold1 || numRecognitions == 2){
+            leftServo.setPosition(.5);
+            rightServo.setPosition(.5);
+            upLeft.setPower(-.5);
+            sleep(30);
+            upRight.setPower(.5);
+            sleep(30);
+
+            drive(1,1100,0,0);
+            drive(1,0,0,-500);
+            sleep(50);
+            rightServo.setPosition(.2);
+            leftServo.setPosition(.8);
+
 
         }
-//right spike
-        else if(horizontalPos > threshold2){
+//middle spike
+        else if(horizontalPos > threshold1){
+            leftServo.setPosition(.5);
+            rightServo.setPosition(.5);
+            upLeft.setPower(-.5);
+            sleep(30);
+            upRight.setPower(.5);
+            sleep(30);
+
+
+            drive(1,1300,0,0);
+            sleep(50);
+            rightServo.setPosition(.2);
+            leftServo.setPosition(.8);
 
         }
 
@@ -82,8 +129,8 @@ public class RedLeft extends LinearOpMode {
         //sleep(50);
 
 //actual code
-        drive(1, 2500, 0, 0);
-        drive(1, 0, 4500, 0);
+        //drive(1, 2500, 0, 0);
+        //drive(1, 0, 4500, 0);
 
 
     }
@@ -94,10 +141,10 @@ public class RedLeft extends LinearOpMode {
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        frontRight.setPower(power);
-        backRight.setPower(power);
-        frontLeft.setPower(power);
-        backLeft.setPower(power);
+        frontRight.setPower(power*.6);
+        backRight.setPower(power*.6);
+        frontLeft.setPower(power*.6);
+        backLeft.setPower(power*.6);
 
         backRight.setTargetPosition(-forward - strafe + turn);
         frontRight.setTargetPosition(-forward + strafe + turn);
@@ -122,7 +169,7 @@ public class RedLeft extends LinearOpMode {
     private void initTfod() {
         tfod = new TfodProcessor.Builder()
 
-                .setModelFileName("blueGP")
+                .setModelFileName("redGP.tflite")
 
                 .setMaxNumRecognitions(1)
                 .setTrackerMaxOverlap(0.25f)
@@ -158,7 +205,7 @@ public class RedLeft extends LinearOpMode {
 
         // Step through the list of recognitions and display info for each one.
         for (Recognition recognition : currentRecognitions) {
-
+            horizontalPos = (recognition.getLeft()+recognition.getRight())/2;
             confidence = recognition.getConfidence();
 
             telemetry.addData("", " ");
