@@ -79,12 +79,15 @@ public class RedRight extends LinearOpMode {
             sleep(50);
 
 
-            drive(1,1100,0,0);
-            drive(1,0,0,500);
+            drive(1,1300,0,0);
+            drive(1,0,-100,0);
+            drive(1,0,0,600);
             sleep(50);
-            //drive(1,300,0,0);
-            rightServo.setPosition(.1);
-            leftServo.setPosition(.9);
+            rightServo.setPosition(.2);
+            leftServo.setPosition(.8);
+            slider.setPower(.5);
+            sleep(50);
+            drive(1,-100,0,0);
 
         }
 //Left spike
@@ -98,10 +101,14 @@ public class RedRight extends LinearOpMode {
             sleep(50);
 
             drive(1,1100,0,0);
+            drive(1,0,100,0);
             drive(1,0,0,-500);
             sleep(50);
-            rightServo.setPosition(.1);
-            leftServo.setPosition(.9);
+            rightServo.setPosition(.2);
+            leftServo.setPosition(.8);
+            slider.setPower(.5);
+            sleep(50);
+            drive(1,-100,0,0);
 
         }
 //middle spike
@@ -118,8 +125,10 @@ public class RedRight extends LinearOpMode {
             sleep(50);
             rightServo.setPosition(.2);
             leftServo.setPosition(.8);
+            slider.setPower(.5);
+            sleep(50);
+            drive(1,-100,0,0);
 
-            drive(1,-400,0,0);
 
 
         }

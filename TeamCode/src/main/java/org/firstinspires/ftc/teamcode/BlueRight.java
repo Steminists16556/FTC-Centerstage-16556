@@ -15,7 +15,7 @@ import java.util.List;
 
 @Autonomous
 public class BlueRight extends LinearOpMode  {
-
+//farthest blue side
     DcMotor backRight;
     DcMotor backLeft;
     DcMotor frontRight;
@@ -74,18 +74,22 @@ public class BlueRight extends LinearOpMode  {
         if(horizontalPos == -100000 || confidence < .7){
             rightServo.setPosition(.5);
             leftServo.setPosition(.5);
+
             upLeft.setPower(-.5);
             sleep(50);
             upRight.setPower(.5);
             sleep(50);
 
 
-            drive(1,1100,0,0);
-            drive(1,0,0,500);
+            drive(1,1300,0,0);
+            drive(1,0,-100,0);
+            drive(1,0,0,600);
             sleep(50);
-            //drive(1,300,0,0);
-            rightServo.setPosition(.1);
-            leftServo.setPosition(.9);
+            rightServo.setPosition(.2);
+            leftServo.setPosition(.8);
+            slider.setPower(.5);
+            sleep(50);
+            drive(1,-100,0,0);
 
         }
 
@@ -101,10 +105,14 @@ public class BlueRight extends LinearOpMode  {
 
 
             drive(1,1100,0,0);
+            drive(1,0,200,0);
             drive(1,0,0,-500);
             sleep(50);
-            rightServo.setPosition(.1);
-            leftServo.setPosition(.9);
+            rightServo.setPosition(.2);
+            leftServo.setPosition(.8);
+            slider.setPower(.5);
+            sleep(50);
+            drive(1,-100,0,0);
 
         }
 //middle spike
@@ -121,8 +129,12 @@ public class BlueRight extends LinearOpMode  {
 
             drive(1,1300,0,0);
             sleep(50);
-            rightServo.setPosition(.1);
-            leftServo.setPosition(.9);
+            rightServo.setPosition(.2);
+            leftServo.setPosition(.8);
+            slider.setPower(.5);
+            sleep(50);
+            drive(1,-400,0,0);
+            //drive(1,0,1400,0);
 
         }
 

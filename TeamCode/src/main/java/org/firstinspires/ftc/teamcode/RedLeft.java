@@ -16,7 +16,7 @@ import java.util.List;
 
 @Autonomous
 public class RedLeft extends LinearOpMode {
-
+//farthest red side
     DcMotor backRight;
     DcMotor backLeft;
     DcMotor frontRight;
@@ -27,6 +27,7 @@ public class RedLeft extends LinearOpMode {
     DcMotor upRight;
     Servo leftServo;
     Servo rightServo;
+
 
     double horizontalPos = -100000;
 
@@ -51,7 +52,7 @@ public class RedLeft extends LinearOpMode {
         backLeft = hardwareMap.dcMotor.get("backLeft");
         frontLeft = hardwareMap.dcMotor.get("frontLeft");
         frontRight = hardwareMap.dcMotor.get("frontRight");
-        upRight = hardwareMap.dcMotor.get("getRight");
+        upRight = hardwareMap.dcMotor.get("upRight");
         upLeft = hardwareMap.dcMotor.get("upLeft");
         slider = hardwareMap.dcMotor.get("slider");
         arm = hardwareMap.dcMotor.get("arm");
@@ -83,28 +84,35 @@ public class RedLeft extends LinearOpMode {
 
 
             drive(1,1100,0,0);
+            drive(1,0,250,0);
             drive(1,0,0,500);
             sleep(50);
-            //sleep(50);
-            //drive(1,300, 0,0);
             rightServo.setPosition(.2);
             leftServo.setPosition(.8);
+            slider.setPower(.5);
+            sleep(50);
+            drive(1,-100,0,0);
 
         }
 //Left spike
         else if(horizontalPos < threshold1 || numRecognitions == 2){
             leftServo.setPosition(.5);
             rightServo.setPosition(.5);
+
             upLeft.setPower(-.5);
             sleep(30);
             upRight.setPower(.5);
             sleep(30);
 
-            drive(1,1100,0,0);
-            drive(1,0,0,-500);
+            drive(1,1300,0,0);
+            drive(1,0,-200,0);
+            drive(1,0,0,-600);
             sleep(50);
             rightServo.setPosition(.2);
             leftServo.setPosition(.8);
+            slider.setPower(.5);
+            sleep(50);
+            drive(1,-100,0,0);
 
 
         }
@@ -112,16 +120,20 @@ public class RedLeft extends LinearOpMode {
         else if(horizontalPos > threshold1){
             leftServo.setPosition(.5);
             rightServo.setPosition(.5);
+
             upLeft.setPower(-.5);
             sleep(30);
             upRight.setPower(.5);
             sleep(30);
 
 
-            drive(1,1300,0,0);
+            drive(1,1350,0,0);
             sleep(50);
             rightServo.setPosition(.2);
             leftServo.setPosition(.8);
+            slider.setPower(.5);
+            sleep(50);
+            drive(1,-100,0,0);
 
         }
 

@@ -27,6 +27,10 @@ public class Steminists extends OpMode { //1st bracket
     Servo leftServo;
     Servo drone;
 
+    double hangTicks = 1425.1;
+    double hangTarget;
+
+
 
     public void init() { //2nd bracket
 
@@ -55,7 +59,7 @@ public class Steminists extends OpMode { //1st bracket
 //reversing right motors
         backRight.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        upRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        //upRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
     } //2nd end bracket
@@ -80,8 +84,8 @@ public class Steminists extends OpMode { //1st bracket
 
         slider.setPower(out);
 //code for suspender
-        upLeft.setPower(lift);
-        upRight.setPower(lift);
+        //upLeft.setPower(lift);
+        //upRight.setPower(lift);
 
 
 //Servo code
@@ -104,12 +108,70 @@ public class Steminists extends OpMode { //1st bracket
         if (gamepad2.y) {
             drone.setPosition(.2);
         }
+//hanging ticks
+
+        //all the way
+        if(gamepad1.a) {
+            full(-1.80);
+            full2(1.80);
+        }
+
+        //origin
+        if(gamepad1.x) {
+            full(-.4);
+            full2(.4);
+        }
+
+        //latch on
+        if(gamepad1.y) {
+            full(-1.70);
+            full2(1.70);
+        }
+
+        //hang
+        if(gamepad1.b) {
+            full(-.3);
+            full2(.3);
+        }
 
 
 
 
     } //end of loops
 
+    public void full (double turnage) {
+        hangTarget = hangTicks*turnage;
+        upLeft.setTargetPosition((int)hangTarget);
+        //upRight.setTargetPosition((int)hangTarget);
+
+        upLeft.setPower(.75);
+        //upRight.setPower(-.75);
+
+        upLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //upRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+    }
+
+    public void full2 (double turnage) {
+        hangTarget = hangTicks*turnage;
+        upRight.setTargetPosition((int)hangTarget);
+        upRight.setPower(.75);
+        upRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+/*
+    public void origin(){
+        upLeft.setTargetPosition(0);
+        upRight.setTargetPosition(0);
+
+        upLeft.setPower(.75);
+        upRight.setPower(.75);
+
+        upLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        upRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+    }
+*/
 
 }    //last bracket
 

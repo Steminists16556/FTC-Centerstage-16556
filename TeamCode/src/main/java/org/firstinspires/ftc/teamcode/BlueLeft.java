@@ -75,17 +75,22 @@ public class BlueLeft extends LinearOpMode {
         if(horizontalPos == -100000 || confidence < .8){
             leftServo.setPosition(.5);
             rightServo.setPosition(.5);
+
             upLeft.setPower(-.5);
             sleep(30);
             upRight.setPower(.5);
             sleep(30);
 
 
-            drive(1,1200,0,0);
-            drive(1,0,0,400);
+            drive(1,1100,0,0);
+            drive(1,0,-100,0);
+            drive(1,0,0,500);
             sleep(50);
-            rightServo.setPosition(.1);
-            leftServo.setPosition(.9);
+            rightServo.setPosition(.2);
+            leftServo.setPosition(.8);
+            slider.setPower(.5);
+            sleep(50);
+            drive(1,-100,0,0);
 
         }
 
@@ -93,24 +98,29 @@ public class BlueLeft extends LinearOpMode {
         else if(horizontalPos < threshold1 || numRecognitions == 2){
             leftServo.setPosition(.5);
             rightServo.setPosition(.5);
+
             upLeft.setPower(-.5);
             sleep(50);
             upRight.setPower(.5);
             sleep(50);
 
 
-            drive(1,1200,0,0);
-            drive(1,0,0,-400);
+            drive(1,1300,0,0);
+            drive(1,0,100,0);
+            drive(1,0,0,-600);
             sleep(50);
-            rightServo.setPosition(.1);
-            leftServo.setPosition(.9);
+            rightServo.setPosition(.2);
+            leftServo.setPosition(.8);
+            slider.setPower(.5);
+            sleep(50);
+            drive(1,-100,0,0);
 
         }
 //middle spike
         else if(horizontalPos > threshold1){
-
             leftServo.setPosition(.5);
             rightServo.setPosition(.5);
+
             upLeft.setPower(-.5);
             sleep(50);
             upRight.setPower(.5);
@@ -119,8 +129,12 @@ public class BlueLeft extends LinearOpMode {
 
             drive(1,1300,0,0);
             sleep(50);
-            rightServo.setPosition(.1);
-            leftServo.setPosition(.9);
+            rightServo.setPosition(.2);
+            leftServo.setPosition(.8);
+            slider.setPower(.5);
+            sleep(50);
+            drive(1,-100,0,0);
+
 
         }
 
@@ -135,10 +149,10 @@ public class BlueLeft extends LinearOpMode {
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        frontRight.setPower(power);
-        backRight.setPower(power);
-        frontLeft.setPower(power);
-        backLeft.setPower(power);
+        frontRight.setPower(power*.6);
+        backRight.setPower(power*.6);
+        frontLeft.setPower(power*.6);
+        backLeft.setPower(power*.6);
 
         backRight.setTargetPosition(- forward+strafe+turn);
         frontRight.setTargetPosition(- forward-strafe+turn);
